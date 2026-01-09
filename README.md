@@ -2,6 +2,8 @@
 
 Technical documentation for the ThingsBoard IoT platform, prepared for platform rewrite.
 
+> **Progress**: See [ROADMAP.md](./ROADMAP.md) for documentation status and next steps.
+
 ## Purpose
 
 This documentation captures the behavior, architecture, and data flows of the ThingsBoard platform in technology-agnostic terms. It serves as a reference for understanding the existing system before implementing a rewrite.
