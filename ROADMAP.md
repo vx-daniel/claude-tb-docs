@@ -10,12 +10,12 @@ This file tracks documentation progress for the ThingsBoard platform rewrite pre
 |-------|--------|-----------|-----------|
 | Phase 1: Foundation | ✅ Complete | 6 | 6 |
 | Phase 2: Data Pathways | ✅ Complete | 5 | 5 |
-| Phase 3: Rule Engine | 🔄 In Progress | 5 | 1 |
-| Phase 4: API Surface | ⏳ Pending | 5 | 0 |
+| Phase 3: Rule Engine | ✅ Complete | 5 | 5 |
+| Phase 4: API Surface | 🔄 In Progress | 5 | 1 |
 | Phase 5: Persistence & Infrastructure | ⏳ Pending | 5 | 0 |
 | Phase 6: Frontend & Remaining | ⏳ Pending | 5+ | 0 |
 
-**Total Progress**: 12 / ~31 core documents (39%)
+**Total Progress**: 17 / ~31 core documents (55%)
 
 ---
 
@@ -48,27 +48,27 @@ How data moves through the system.
 
 ---
 
-## Phase 3: Rule Engine 🔄
+## Phase 3: Rule Engine ✅
 
 The "business logic" layer - configurable data processing.
 
 | Document | Status | Path | Priority |
 |----------|--------|------|----------|
 | Rule Engine Overview | ✅ Done | `04-rule-engine/README.md` | 1 |
-| Rule Chain Structure | ⏳ Pending | `04-rule-engine/rule-chain-structure.md` | 2 |
-| Message Flow (TbMsg) | ⏳ Pending | `04-rule-engine/message-flow.md` | 3 |
-| Node Categories | ⏳ Pending | `04-rule-engine/node-categories.md` | 4 |
-| Node Development Contract | ⏳ Pending | `04-rule-engine/node-development-contract.md` | 5 |
+| Rule Chain Structure | ✅ Done | `04-rule-engine/rule-chain-structure.md` | 2 |
+| Message Flow (TbMsg) | ✅ Done | `04-rule-engine/message-flow.md` | 3 |
+| Node Categories | ✅ Done | `04-rule-engine/node-categories.md` | 4 |
+| Node Development Contract | ✅ Done | `04-rule-engine/node-development-contract.md` | 5 |
 
 ---
 
-## Phase 4: API Surface ⏳
+## Phase 4: API Surface 🔄
 
 External interfaces for users and integrations.
 
 | Document | Status | Path | Priority |
 |----------|--------|------|----------|
-| REST API Overview | ⏳ Pending | `06-api-layer/rest-api-overview.md` | 1 |
+| REST API Overview | ✅ Done | `06-api-layer/rest-api-overview.md` | 1 |
 | Authentication (JWT) | ⏳ Pending | `06-api-layer/authentication.md` | 2 |
 | Device API | ⏳ Pending | `06-api-layer/device-api.md` | 3 |
 | WebSocket Overview | ⏳ Pending | `06-api-layer/websocket-overview.md` | 4 |
@@ -225,3 +225,8 @@ Guidelines:
 - MQTT protocol documentation complete (10/31 documents, 32%)
 - Message queue architecture complete - Phase 2 finished (11/31 documents, 35%)
 - Rule engine overview complete - Phase 3 started (12/31 documents, 39%)
+- Rule chain structure documentation complete (13/31 documents, 42%)
+- Message flow (TbMsg) documentation complete (14/31 documents, 45%)
+- Node categories documentation complete (15/31 documents, 48%)
+- Node development contract complete - Phase 3 finished (16/31 documents, 52%)
+- REST API overview complete - Phase 4 started (17/31 documents, 55%)
