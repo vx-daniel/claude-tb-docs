@@ -11,11 +11,11 @@ This file tracks documentation progress for the ThingsBoard platform rewrite pre
 | Phase 1: Foundation | ✅ Complete | 6 | 6 |
 | Phase 2: Data Pathways | ✅ Complete | 5 | 5 |
 | Phase 3: Rule Engine | ✅ Complete | 5 | 5 |
-| Phase 4: API Surface | 🔄 In Progress | 5 | 4 |
-| Phase 5: Persistence & Infrastructure | ⏳ Pending | 5 | 0 |
+| Phase 4: API Surface | ✅ Complete | 5 | 5 |
+| Phase 5: Persistence & Infrastructure | ⏳ In Progress | 5 | 1 |
 | Phase 6: Frontend & Remaining | ⏳ Pending | 5+ | 0 |
 
-**Total Progress**: 20 / ~31 core documents (65%)
+**Total Progress**: 22 / ~31 core documents (71%)
 
 ---
 
@@ -62,7 +62,7 @@ The "business logic" layer - configurable data processing.
 
 ---
 
-## Phase 4: API Surface 🔄
+## Phase 4: API Surface ✅
 
 External interfaces for users and integrations.
 
@@ -72,7 +72,7 @@ External interfaces for users and integrations.
 | Authentication (JWT) | ✅ Done | `06-api-layer/authentication.md` | 2 |
 | Device API | ✅ Done | `06-api-layer/device-api.md` | 3 |
 | WebSocket Overview | ✅ Done | `06-api-layer/websocket-overview.md` | 4 |
-| Subscription Model | ⏳ Pending | `06-api-layer/subscription-model.md` | 5 |
+| Subscription Model | ✅ Done | `06-api-layer/subscription-model.md` | 5 |
 
 ---
 
@@ -82,7 +82,7 @@ Storage and deployment patterns.
 
 | Document | Status | Path | Priority |
 |----------|--------|------|----------|
-| Database Schema | ⏳ Pending | `07-data-persistence/database-schema.md` | 1 |
+| Database Schema | ✅ Done | `07-data-persistence/database-schema.md` | 1 |
 | Time-Series Storage | ⏳ Pending | `07-data-persistence/timeseries-storage.md` | 2 |
 | Multi-Tenancy | ⏳ Pending | `01-architecture/multi-tenancy.md` | 3 |
 | Microservices | ⏳ Pending | `11-microservices/README.md` | 4 |
@@ -166,7 +166,7 @@ UI architecture and remaining transports/entities.
 - [x] MQTT Connect Sequence
 - [x] JWT Authentication Sequence
 - [ ] Alarm Lifecycle Flow
-- [ ] Database Schema ER Diagram
+- [x] Database Schema ER Diagram
 - [x] Queue Topic Structure
 - [ ] Frontend Module Dependencies
 
@@ -233,3 +233,5 @@ Guidelines:
 - Authentication (JWT) documentation complete (18/31 documents, 58%)
 - Device API documentation complete (19/31 documents, 61%)
 - WebSocket Overview documentation complete (20/31 documents, 65%)
+- Subscription Model documentation complete - Phase 4 finished (21/31 documents, 68%)
+- Database Schema documentation complete - Phase 5 started (22/31 documents, 71%)
