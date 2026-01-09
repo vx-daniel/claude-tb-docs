@@ -9,13 +9,13 @@ This file tracks documentation progress for the ThingsBoard platform rewrite pre
 | Phase | Status | Documents | Completed |
 |-------|--------|-----------|-----------|
 | Phase 1: Foundation | ✅ Complete | 6 | 6 |
-| Phase 2: Data Pathways | 🔄 In Progress | 5 | 4 |
-| Phase 3: Rule Engine | ⏳ Pending | 5 | 0 |
+| Phase 2: Data Pathways | ✅ Complete | 5 | 5 |
+| Phase 3: Rule Engine | 🔄 In Progress | 5 | 1 |
 | Phase 4: API Surface | ⏳ Pending | 5 | 0 |
 | Phase 5: Persistence & Infrastructure | ⏳ Pending | 5 | 0 |
 | Phase 6: Frontend & Remaining | ⏳ Pending | 5+ | 0 |
 
-**Total Progress**: 10 / ~31 core documents (32%)
+**Total Progress**: 12 / ~31 core documents (39%)
 
 ---
 
@@ -34,7 +34,7 @@ Establishes the mental model for understanding the platform.
 
 ---
 
-## Phase 2: Data Pathways 🔄
+## Phase 2: Data Pathways ✅
 
 How data moves through the system.
 
@@ -44,17 +44,17 @@ How data moves through the system.
 | Attributes Data Model | ✅ Done | `02-core-concepts/data-model/attributes.md` | 2 |
 | Transport Contract | ✅ Done | `05-transport-layer/transport-contract.md` | 3 |
 | MQTT Protocol | ✅ Done | `05-transport-layer/mqtt.md` | 4 |
-| Message Queue Architecture | ⏳ Pending | `08-message-queue/queue-architecture.md` | 5 |
+| Message Queue Architecture | ✅ Done | `08-message-queue/queue-architecture.md` | 5 |
 
 ---
 
-## Phase 3: Rule Engine ⏳
+## Phase 3: Rule Engine 🔄
 
 The "business logic" layer - configurable data processing.
 
 | Document | Status | Path | Priority |
 |----------|--------|------|----------|
-| Rule Engine Overview | ⏳ Pending | `04-rule-engine/README.md` | 1 |
+| Rule Engine Overview | ✅ Done | `04-rule-engine/README.md` | 1 |
 | Rule Chain Structure | ⏳ Pending | `04-rule-engine/rule-chain-structure.md` | 2 |
 | Message Flow (TbMsg) | ⏳ Pending | `04-rule-engine/message-flow.md` | 3 |
 | Node Categories | ⏳ Pending | `04-rule-engine/node-categories.md` | 4 |
@@ -162,12 +162,12 @@ UI architecture and remaining transports/entities.
 ### Pending ⏳
 - [ ] Microservices Topology
 - [ ] Multi-Tenant Isolation
-- [ ] Rule Chain Processing Flow
+- [x] Rule Chain Processing Flow
 - [x] MQTT Connect Sequence
 - [ ] JWT Authentication Sequence
 - [ ] Alarm Lifecycle Flow
 - [ ] Database Schema ER Diagram
-- [ ] Queue Topic Structure
+- [x] Queue Topic Structure
 - [ ] Frontend Module Dependencies
 
 ---
@@ -223,3 +223,5 @@ Guidelines:
 - Attributes documentation complete (8/31 documents, 26%)
 - Transport contract documentation complete (9/31 documents, 29%)
 - MQTT protocol documentation complete (10/31 documents, 32%)
+- Message queue architecture complete - Phase 2 finished (11/31 documents, 35%)
+- Rule engine overview complete - Phase 3 started (12/31 documents, 39%)
