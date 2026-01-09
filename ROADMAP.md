@@ -9,13 +9,13 @@ This file tracks documentation progress for the ThingsBoard platform rewrite pre
 | Phase | Status | Documents | Completed |
 |-------|--------|-----------|-----------|
 | Phase 1: Foundation | ✅ Complete | 6 | 6 |
-| Phase 2: Data Pathways | 🔄 In Progress | 5 | 1 |
+| Phase 2: Data Pathways | 🔄 In Progress | 5 | 4 |
 | Phase 3: Rule Engine | ⏳ Pending | 5 | 0 |
 | Phase 4: API Surface | ⏳ Pending | 5 | 0 |
 | Phase 5: Persistence & Infrastructure | ⏳ Pending | 5 | 0 |
 | Phase 6: Frontend & Remaining | ⏳ Pending | 5+ | 0 |
 
-**Total Progress**: 7 / ~31 core documents (23%)
+**Total Progress**: 10 / ~31 core documents (32%)
 
 ---
 
@@ -41,9 +41,9 @@ How data moves through the system.
 | Document | Status | Path | Priority |
 |----------|--------|------|----------|
 | Telemetry Data Model | ✅ Done | `02-core-concepts/data-model/telemetry.md` | 1 |
-| Attributes Data Model | ⏳ Pending | `02-core-concepts/data-model/attributes.md` | 2 |
-| Transport Contract | ⏳ Pending | `05-transport-layer/transport-contract.md` | 3 |
-| MQTT Protocol | ⏳ Pending | `05-transport-layer/mqtt.md` | 4 |
+| Attributes Data Model | ✅ Done | `02-core-concepts/data-model/attributes.md` | 2 |
+| Transport Contract | ✅ Done | `05-transport-layer/transport-contract.md` | 3 |
+| MQTT Protocol | ✅ Done | `05-transport-layer/mqtt.md` | 4 |
 | Message Queue Architecture | ⏳ Pending | `08-message-queue/queue-architecture.md` | 5 |
 
 ---
@@ -163,7 +163,7 @@ UI architecture and remaining transports/entities.
 - [ ] Microservices Topology
 - [ ] Multi-Tenant Isolation
 - [ ] Rule Chain Processing Flow
-- [ ] MQTT Connect Sequence
+- [x] MQTT Connect Sequence
 - [ ] JWT Authentication Sequence
 - [ ] Alarm Lifecycle Flow
 - [ ] Database Schema ER Diagram
@@ -220,3 +220,6 @@ Guidelines:
 - Initial roadmap created
 - Phase 1 complete (6 documents)
 - Phase 2 started (telemetry complete)
+- Attributes documentation complete (8/31 documents, 26%)
+- Transport contract documentation complete (9/31 documents, 29%)
+- MQTT protocol documentation complete (10/31 documents, 32%)
