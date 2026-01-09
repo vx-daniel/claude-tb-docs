@@ -11,11 +11,11 @@ This file tracks documentation progress for the ThingsBoard platform rewrite pre
 | Phase 1: Foundation | ✅ Complete | 6 | 6 |
 | Phase 2: Data Pathways | ✅ Complete | 5 | 5 |
 | Phase 3: Rule Engine | ✅ Complete | 5 | 5 |
-| Phase 4: API Surface | 🔄 In Progress | 5 | 1 |
+| Phase 4: API Surface | 🔄 In Progress | 5 | 4 |
 | Phase 5: Persistence & Infrastructure | ⏳ Pending | 5 | 0 |
 | Phase 6: Frontend & Remaining | ⏳ Pending | 5+ | 0 |
 
-**Total Progress**: 17 / ~31 core documents (55%)
+**Total Progress**: 20 / ~31 core documents (65%)
 
 ---
 
@@ -69,9 +69,9 @@ External interfaces for users and integrations.
 | Document | Status | Path | Priority |
 |----------|--------|------|----------|
 | REST API Overview | ✅ Done | `06-api-layer/rest-api-overview.md` | 1 |
-| Authentication (JWT) | ⏳ Pending | `06-api-layer/authentication.md` | 2 |
-| Device API | ⏳ Pending | `06-api-layer/device-api.md` | 3 |
-| WebSocket Overview | ⏳ Pending | `06-api-layer/websocket-overview.md` | 4 |
+| Authentication (JWT) | ✅ Done | `06-api-layer/authentication.md` | 2 |
+| Device API | ✅ Done | `06-api-layer/device-api.md` | 3 |
+| WebSocket Overview | ✅ Done | `06-api-layer/websocket-overview.md` | 4 |
 | Subscription Model | ⏳ Pending | `06-api-layer/subscription-model.md` | 5 |
 
 ---
@@ -164,7 +164,7 @@ UI architecture and remaining transports/entities.
 - [ ] Multi-Tenant Isolation
 - [x] Rule Chain Processing Flow
 - [x] MQTT Connect Sequence
-- [ ] JWT Authentication Sequence
+- [x] JWT Authentication Sequence
 - [ ] Alarm Lifecycle Flow
 - [ ] Database Schema ER Diagram
 - [x] Queue Topic Structure
@@ -230,3 +230,6 @@ Guidelines:
 - Node categories documentation complete (15/31 documents, 48%)
 - Node development contract complete - Phase 3 finished (16/31 documents, 52%)
 - REST API overview complete - Phase 4 started (17/31 documents, 55%)
+- Authentication (JWT) documentation complete (18/31 documents, 58%)
+- Device API documentation complete (19/31 documents, 61%)
+- WebSocket Overview documentation complete (20/31 documents, 65%)
