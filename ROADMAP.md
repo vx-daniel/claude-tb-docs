@@ -135,7 +135,7 @@ UI architecture and remaining transports/entities.
 ### Security
 | Document | Status | Path |
 |----------|--------|------|
-| Authentication | ⏳ Pending | `09-security/authentication.md` |
+| Authentication | ✅ Done | `09-security/authentication.md` |
 | Authorization | ⏳ Pending | `09-security/authorization.md` |
 | Tenant Isolation | ⏳ Pending | `09-security/tenant-isolation.md` |
 
@@ -284,6 +284,16 @@ Guidelines:
   - Covered error handling and propagation patterns
   - Documented queue integration and callback mechanisms
   - Listed performance considerations and execution limits
+- Created Authentication documentation (`09-security/authentication.md`)
+  - Documented JWT authentication (token structure, claims, lifecycle)
+  - Covered user login flow with credential validation and failed login tracking
+  - Explained Two-Factor Authentication (TOTP, SMS, Email, Backup codes)
+  - Documented OAuth2 integration flow and provider configuration
+  - Covered API Key authentication for integrations
+  - Explained device authentication (ACCESS_TOKEN, X509, MQTT_BASIC, LWM2M)
+  - Included mermaid diagrams for login flow, 2FA flow, OAuth2 flow, token refresh
+  - Documented password policies, security filter chain, rate limiting
+  - Listed error handling patterns and audit logging
 
 ### 2026-01-10 (Session 3)
 - Created Asset Entity documentation (`02-core-concepts/entities/asset.md`)
