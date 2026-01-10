@@ -116,21 +116,21 @@ UI architecture and remaining transports/entities.
 | Customer Entity | ✅ Done | `02-core-concepts/entities/customer.md` |
 | Dashboard Entity | ✅ Done | `02-core-concepts/entities/dashboard.md` |
 | Alarm Entity | ✅ Done | `02-core-concepts/entities/alarm.md` |
-| Entity Relations | ⏳ Pending | `02-core-concepts/entities/relations.md` |
+| Entity Relations | ✅ Done | `02-core-concepts/entities/relations.md` |
 
 ### Core Concepts - Data Model
 | Document | Status | Path |
 |----------|--------|------|
 | Calculated Fields | ✅ Done | `02-core-concepts/data-model/calculated-fields.md` |
-| RPC (Remote Procedure Call) | ⏳ Pending | `02-core-concepts/data-model/rpc.md` |
-| Entity IDs | ⏳ Pending | `02-core-concepts/identity/entity-ids.md` |
+| RPC (Remote Procedure Call) | ✅ Done | `02-core-concepts/data-model/rpc.md` |
+| Entity IDs | ✅ Done | `02-core-concepts/identity/entity-ids.md` |
 
 ### Actor System
 | Document | Status | Path |
 |----------|--------|------|
-| Message Types Reference | ⏳ Pending | `03-actor-system/message-types.md` |
-| Device Actor | ⏳ Pending | `03-actor-system/device-actor.md` |
-| Rule Chain Actor | ⏳ Pending | `03-actor-system/rule-chain-actor.md` |
+| Message Types Reference | ✅ Done | `03-actor-system/message-types.md` |
+| Device Actor | ✅ Done | `03-actor-system/device-actor.md` |
+| Rule Chain Actor | ✅ Done | `03-actor-system/rule-chain-actor.md` |
 
 ### Security
 | Document | Status | Path |
@@ -229,6 +229,61 @@ Guidelines:
   - Covered propagation to parent entities with configuration options
   - Documented all operations (acknowledge, clear, assign, unassign)
   - Listed REST API endpoints for retrieval, modification, and utilities
+- Created Entity Relations documentation (`02-core-concepts/entities/relations.md`)
+  - Documented relation data structure (from, to, type, typeGroup, additionalInfo)
+  - Explained direction semantics (FROM = outgoing, TO = incoming)
+  - Listed built-in types (Contains, Manages, Uses, ManagedByEdge) and type groups
+  - Included mermaid diagrams for direction semantics, hierarchies, query flow, deletion patterns
+  - Covered use cases: asset hierarchies, alarm propagation, dashboard aliases, rule chain routing
+  - Documented query capabilities: simple queries, complex EntityRelationsQuery, filters
+  - Listed REST API endpoints for CRUD and complex queries
+  - Explained access control, performance considerations, and edge cases
+- Created RPC documentation (`02-core-concepts/data-model/rpc.md`)
+  - Documented server-side RPC (platform to device) and client-side RPC (device to platform)
+  - Explained one-way vs two-way RPC differences
+  - Covered persistent vs lightweight RPC with status lifecycle (QUEUED→SENT→DELIVERED→SUCCESSFUL)
+  - Included mermaid diagrams for request flows, status lifecycle, timeout handling, retry mechanism
+  - Documented transport patterns: MQTT topics, CoAP resources, HTTP endpoints
+  - Listed REST API endpoints for RPC operations
+  - Covered rule engine integration with RPC message types
+  - Documented timeout, retry, and error handling scenarios
+- Created Entity IDs documentation (`02-core-concepts/identity/entity-ids.md`)
+  - Documented ID structure: entityType + UUID format
+  - Listed all 44 entity types with their purposes
+  - Explained NULL_UUID constant and System Tenant ID
+  - Included mermaid diagrams for ID anatomy, hierarchy, multi-tenancy, type safety
+  - Covered JSON serialization and REST API patterns
+  - Documented ID operations: creation, validation, comparison
+  - Explained cross-entity references and foreign key patterns
+  - Covered multi-tenancy isolation and ID usage across system components
+- Created Message Types Reference (`03-actor-system/message-types.md`)
+  - Documented TbMsg structure (type, originator, metadata, data)
+  - Organized 60+ message types into categories (device data, lifecycle, RPC, alarm, entity, etc.)
+  - Included mermaid diagrams for message flow, lifecycle states, rule engine routing
+  - Covered all message type triggers and their originators
+  - Documented rule node connection mapping for routing
+  - Explained metadata patterns for different message categories
+  - Listed message sources (transport, device actor, entity service, alarm service)
+  - Provided example payloads for common message types
+- Created Device Actor documentation (`03-actor-system/device-actor.md`)
+  - Documented actor lifecycle (creation, initialization, active operation, destruction)
+  - Listed all message types handled (transport, session, update, RPC, lifecycle)
+  - Explained session management (types, lifecycle, limits, timeout)
+  - Covered RPC handling with submission strategies (BURST, SEQUENTIAL_ON_ACK, SEQUENTIAL_ON_RESPONSE)
+  - Included mermaid diagrams for lifecycle, message routing, session flow, RPC flow
+  - Documented attribute distribution and activity tracking
+  - Explained actor interactions (tenant actor, transport, device state service, RPC service)
+  - Covered error handling and recovery mechanisms (session restoration, RPC queuing)
+- Created Rule Chain Actor documentation (`03-actor-system/rule-chain-actor.md`)
+  - Documented actor lifecycle (initialization, node loading, routing table building)
+  - Explained message entry points (queue, other chains, direct input)
+  - Covered node actor management and hot reload without downtime
+  - Documented connection routing (relation types, single/multiple targets, local/remote)
+  - Explained sub-rule chain invocation with call stack management
+  - Included mermaid diagrams for lifecycle, architecture, message flow, routing
+  - Covered error handling and propagation patterns
+  - Documented queue integration and callback mechanisms
+  - Listed performance considerations and execution limits
 
 ### 2026-01-10 (Session 3)
 - Created Asset Entity documentation (`02-core-concepts/entities/asset.md`)
