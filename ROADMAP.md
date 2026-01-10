@@ -136,7 +136,7 @@ UI architecture and remaining transports/entities.
 | Document | Status | Path |
 |----------|--------|------|
 | Authentication | ✅ Done | `09-security/authentication.md` |
-| Authorization | ⏳ Pending | `09-security/authorization.md` |
+| Authorization | ✅ Done | `09-security/authorization.md` |
 | Tenant Isolation | ⏳ Pending | `09-security/tenant-isolation.md` |
 
 ### Microservices
@@ -294,6 +294,15 @@ Guidelines:
   - Included mermaid diagrams for login flow, 2FA flow, OAuth2 flow, token refresh
   - Documented password policies, security filter chain, rate limiting
   - Listed error handling patterns and audit logging
+- Created Authorization documentation (`09-security/authorization.md`)
+  - Documented three-tier authority hierarchy (SYS_ADMIN, TENANT_ADMIN, CUSTOMER_USER)
+  - Explained permission model with 28 resources and 18 operations
+  - Covered two-level authorization (endpoint authority + entity permission)
+  - Created role permissions matrix for each authority level
+  - Included mermaid diagrams for authority hierarchy, authorization flow, permission checker
+  - Documented entity-level access rules (tenant membership, customer assignment)
+  - Covered special permissions (RPC, device claiming, alarms, telemetry)
+  - Listed common authorization patterns with sequence diagrams
 
 ### 2026-01-10 (Session 3)
 - Created Asset Entity documentation (`02-core-concepts/entities/asset.md`)
