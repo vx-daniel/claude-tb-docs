@@ -439,21 +439,69 @@ graph TB
     end
 ```
 
-### Available Services
+### Available Services (40+ Injected)
 
+The WidgetContext provides access to over 40 platform services:
+
+**Entity Services:**
 | Service | Purpose |
 |---------|---------|
 | deviceService | Device CRUD operations |
 | assetService | Asset CRUD operations |
 | entityService | Generic entity operations |
+| entityRelationService | Entity relationships |
+| entityGroupService | Entity group management |
+| customerService | Customer operations |
+| userService | User management |
+| tenantService | Tenant operations |
+
+**Data Services:**
+| Service | Purpose |
+|---------|---------|
 | attributeService | Attribute read/write |
 | telemetryWsService | WebSocket telemetry |
+| alarmService | Alarm operations |
+| deviceProfileService | Device profiles |
+| assetProfileService | Asset profiles |
+
+**Dashboard Services:**
+| Service | Purpose |
+|---------|---------|
 | dashboardService | Dashboard operations |
+| dashboardUtilsService | Dashboard utilities |
+| widgetService | Widget definitions |
+| widgetComponentService | Widget rendering |
+
+**Platform Services:**
+| Service | Purpose |
+|---------|---------|
 | authService | Authentication info |
 | http | Raw HTTP client |
 | dialogs | Dialog popups |
-| translate | Internationalization |
+| translate | Internationalization (i18n) |
 | router | Navigation |
+| date | Date utilities |
+| sanitizer | DOM sanitizer |
+| ngZone | Angular zone |
+| store | NgRx store access |
+| rxjs | RxJS utilities |
+
+**UI Services:**
+| Service | Purpose |
+|---------|---------|
+| importExport | Import/export functionality |
+| raf | Request animation frame |
+| cd | Change detection |
+| renderer | DOM renderer |
+
+**Specialized Services:**
+| Service | Purpose |
+|---------|---------|
+| ruleChainService | Rule chain operations |
+| entityViewService | Entity view management |
+| notificationService | Platform notifications |
+| resourceService | Resource management |
+| otaPackageService | OTA package management |
 
 ### Utility Functions
 

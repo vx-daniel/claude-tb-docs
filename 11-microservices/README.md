@@ -503,29 +503,48 @@ Some components can run in different modes:
 
 ## Service Discovery
 
+### Zookeeper-Based Discovery
+
+The platform uses Apache Zookeeper for service discovery and coordination. Zookeeper provides:
+
+- **Ephemeral nodes**: Services register as ephemeral znodes that automatically disappear on disconnect
+- **Watch notifications**: Other services receive instant updates when the cluster changes
+- **Consistent configuration**: Shared configuration across all services
+
 ### Registration Flow
 
 ```mermaid
 sequenceDiagram
     participant Service as TB Service
-    participant ZK as Service Registry
+    participant ZK as Zookeeper
     participant Other as Other Services
 
     Service->>Service: Initialize
-    Service->>ZK: Register ServiceInfo
-    Note over ZK: Store: serviceId, types,<br/>system info, status
+    Service->>ZK: Create ephemeral znode
+    Note over ZK: /thingsboard/nodes/{serviceId}
 
-    ZK-->>Other: Notify: new service
-    Other->>ZK: Get service list
+    ZK-->>Other: Watch notification
+    Other->>ZK: Get children of /nodes
     ZK-->>Other: ServiceInfo[]
 
     loop Heartbeat
-        Service->>ZK: Update status
+        Service->>ZK: Session keep-alive
     end
 
-    Service->>ZK: Deregister (shutdown)
-    ZK-->>Other: Notify: service removed
+    Service-xZK: Connection lost
+    ZK->>ZK: Delete ephemeral node
+    ZK-->>Other: Watch notification: node deleted
 ```
+
+### Zookeeper Configuration
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| ZOOKEEPER_ENABLED | Enable service discovery | true |
+| ZOOKEEPER_URL | Zookeeper connection string | localhost:2181 |
+| ZOOKEEPER_SESSION_TIMEOUT_MS | Session timeout | 10000 |
+| ZOOKEEPER_CONNECTION_TIMEOUT_MS | Connection timeout | 30000 |
+| ZOOKEEPER_RETRY_INTERVAL_MS | Retry interval on failure | 3000 |
 
 ### Service Info Structure
 
@@ -537,6 +556,7 @@ sequenceDiagram
 | systemInfo | CPU, memory, disk metrics |
 | assignedTenantProfiles | Isolated tenant assignments |
 | ready | Service readiness status |
+| partitionsPerNode | Queue partition assignments |
 
 ### Discovery Use Cases
 
@@ -546,6 +566,7 @@ sequenceDiagram
 | Credential validation | Transport finds core service |
 | Load balancing | Distribute across available instances |
 | Failover | Detect failed services |
+| Partition reassignment | Hash-based rebalancing on cluster change |
 
 ## Configuration
 
@@ -704,6 +725,96 @@ graph TB
 | Database | 2+ | Primary + replica |
 | Cache | 3+ | Cluster or sentinel |
 | Service Registry | 3 | Quorum-based |
+
+## Load Balancing
+
+### HAProxy Configuration
+
+HAProxy serves as the primary load balancer for distributing traffic across service instances.
+
+```mermaid
+graph TB
+    subgraph "External Traffic"
+        WEB[Web Clients]
+        API[API Clients]
+        WS[WebSocket Clients]
+    end
+
+    subgraph "HAProxy"
+        LB[HAProxy Load Balancer]
+    end
+
+    subgraph "Backend Servers"
+        TB1[tb-node-1:8080]
+        TB2[tb-node-2:8080]
+        TB3[tb-node-3:8080]
+    end
+
+    WEB --> LB
+    API --> LB
+    WS --> LB
+    LB --> TB1
+    LB --> TB2
+    LB --> TB3
+```
+
+### Load Balancing Algorithms
+
+| Algorithm | Configuration | Use Case |
+|-----------|---------------|----------|
+| Round-robin | `balance roundrobin` | Default, even distribution |
+| Least connections | `balance leastconn` | Long-lived connections |
+| Source sticky | `balance source` | Session affinity |
+
+### HAProxy Backend Configuration
+
+```
+backend tb-http-backend
+    balance roundrobin
+    option tcp-check
+    option log-health-checks
+    server tb-node-1 tb-node-1:8080 check inter 5s
+    server tb-node-2 tb-node-2:8080 check inter 5s
+    server tb-node-3 tb-node-3:8080 check inter 5s
+
+backend tb-mqtt-backend
+    balance leastconn
+    option tcp-check
+    server mqtt-1 tb-mqtt-1:1883 check inter 5s
+    server mqtt-2 tb-mqtt-2:1883 check inter 5s
+```
+
+### WebSocket Configuration
+
+WebSocket connections require special handling for sticky sessions:
+
+```
+backend tb-websocket-backend
+    balance source
+    option httpchk GET /api/health
+    http-check expect status 200
+    server tb-node-1 tb-node-1:8080 check inter 5s
+    server tb-node-2 tb-node-2:8080 check inter 5s
+```
+
+### Health Checks
+
+| Check Type | Endpoint | Purpose |
+|------------|----------|---------|
+| TCP check | Port connectivity | Basic availability |
+| HTTP check | `/api/health` | Application readiness |
+| Custom | `/api/actuator/health` | Detailed health status |
+
+### Rate Limiting with HAProxy
+
+```
+frontend tb-frontend
+    bind *:80
+    # Rate limit: 100 requests per second per IP
+    stick-table type ip size 100k expire 30s store http_req_rate(1s)
+    http-request track-sc0 src
+    http-request deny deny_status 429 if { sc_http_req_rate(0) gt 100 }
+```
 
 ## Monitoring
 

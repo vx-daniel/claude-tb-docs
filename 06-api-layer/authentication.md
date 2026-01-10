@@ -2,7 +2,16 @@
 
 ## Overview
 
-ThingsBoard uses JWT (JSON Web Token) based authentication for securing API access. The platform issues two types of tokens: short-lived access tokens for API calls and longer-lived refresh tokens for obtaining new access tokens. Authentication supports multiple methods including username/password, OAuth2 providers, and two-factor authentication (2FA).
+ThingsBoard uses JWT (JSON Web Token) based authentication for securing API access. The platform issues two types of tokens: short-lived access tokens for API calls and longer-lived refresh tokens for obtaining new access tokens. Authentication supports multiple methods including username/password, OAuth2 providers, API Keys (Personal Access Tokens), and two-factor authentication (2FA).
+
+## Authentication Methods Summary
+
+| Method | Use Case | Header Format |
+|--------|----------|---------------|
+| JWT Bearer | User sessions | `Authorization: Bearer <token>` or `X-Authorization: <token>` |
+| API Key | Service integrations | `Authorization: ApiKey <key>` |
+| OAuth2 | External identity providers | Redirect-based flow |
+| Device Token | Device connectivity | Protocol-specific (MQTT username, HTTP path) |
 
 ## Key Behaviors
 
@@ -549,6 +558,138 @@ sequenceDiagram
     Note over P: Access limited to<br/>public customer's entities
 ```
 
+## API Key Authentication (Personal Access Tokens)
+
+API Keys provide long-lived authentication for service integrations without requiring username/password login.
+
+### API Key Structure
+
+```json
+{
+  "id": {
+    "entityType": "API_KEY",
+    "id": "apikey-uuid"
+  },
+  "tenantId": { "id": "tenant-uuid" },
+  "userId": { "id": "user-uuid" },
+  "name": "Integration Service Key",
+  "value": "AbCdEf123456...",
+  "expirationTime": 1735689600000,
+  "enabled": true
+}
+```
+
+### API Key Usage
+
+```
+GET /api/devices
+Authorization: ApiKey AbCdEf123456...
+```
+
+### API Key Features
+
+| Feature | Description |
+|---------|-------------|
+| Expiration | Optional expiration timestamp |
+| Enable/Disable | Can be disabled without deletion |
+| User Association | Inherits permissions from associated user |
+| XSS Protection | Values sanitized against injection |
+
+### API Key Processing
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant F as ApiKey Filter
+    participant P as ApiKey Provider
+    participant DB as Database
+
+    C->>F: Request with ApiKey header
+    F->>F: Extract key from header
+    F->>P: Authenticate key
+    P->>DB: Find ApiKey by value
+    DB-->>P: ApiKey entity
+    P->>P: Check enabled status
+    P->>P: Check expiration time
+    alt Valid key
+        P-->>F: SecurityUser
+        F-->>C: Process request
+    else Invalid/expired
+        P-->>C: 401 Unauthorized
+    end
+```
+
+## Device Credentials
+
+Devices authenticate using credentials configured in their device profile.
+
+### Credential Types
+
+| Type | Description | Use Case |
+|------|-------------|----------|
+| ACCESS_TOKEN | Simple token authentication | Basic device connectivity |
+| X509_CERTIFICATE | X.509 certificate authentication | Secure TLS-based auth |
+| MQTT_BASIC | Username/password for MQTT | MQTT broker authentication |
+| LWM2M_CREDENTIALS | LwM2M security configuration | Lightweight M2M devices |
+
+### Access Token Authentication
+
+```mermaid
+sequenceDiagram
+    participant D as Device
+    participant T as Transport
+    participant A as Auth Service
+
+    D->>T: Connect with access token
+    T->>A: Validate token
+    A->>A: Lookup device by token
+    alt Token valid
+        A-->>T: DeviceAuthResult (success)
+        T-->>D: Connection established
+    else Token invalid
+        A-->>T: DeviceAuthResult (failure)
+        T-->>D: Connection rejected
+    end
+```
+
+### X.509 Certificate Authentication
+
+Supports both JKS keystore and PEM certificate formats for mutual TLS authentication.
+
+```mermaid
+graph LR
+    D[Device] -->|TLS + Client Cert| T[Transport]
+    T -->|Extract CN/Fingerprint| A[Auth Service]
+    A -->|Match Credentials| DB[(Database)]
+```
+
+## Security Filter Chain
+
+The platform processes requests through a series of security filters:
+
+```mermaid
+graph TB
+    REQ[Incoming Request] --> AEH[Auth Exception Handler]
+    AEH --> RLPF[Rest Login Filter<br/>/api/auth/login]
+    RLPF --> RPLF[Rest Public Login Filter<br/>/api/auth/login/public]
+    RPLF --> JTAF[JWT Token Auth Filter]
+    JTAF --> AKTF[API Key Token Auth Filter]
+    AKTF --> RTPF[Refresh Token Filter<br/>/api/auth/token]
+    RTPF --> RLF[Rate Limit Filter]
+    RLF --> CTRL[Controller]
+```
+
+### Filter Responsibilities
+
+| Filter | Path | Function |
+|--------|------|----------|
+| RestLoginProcessingFilter | `/api/auth/login` | Username/password authentication |
+| RestPublicLoginProcessingFilter | `/api/auth/login/public` | Public customer login |
+| JwtTokenAuthenticationProcessingFilter | `/**` | JWT token validation |
+| ApiKeyTokenAuthenticationProcessingFilter | `/**` | API key validation |
+| RefreshTokenProcessingFilter | `/api/auth/token` | Token refresh |
+| RateLimitProcessingFilter | `/**` | Rate limiting enforcement |
+
 ## Rate Limiting
 
 Authentication endpoints have rate limiting to prevent brute force attacks:
@@ -558,6 +699,40 @@ Authentication endpoints have rate limiting to prevent brute force attacks:
 | Login | Per IP and account |
 | Password Reset | 5 per hour per user |
 | Token Refresh | Per user |
+| REST Requests | Per tenant/customer (configurable) |
+
+### Rate Limit Types
+
+| Limit Type | Scope | Description |
+|------------|-------|-------------|
+| REST_REQUESTS_PER_TENANT | Tenant | API calls per tenant |
+| REST_REQUESTS_PER_CUSTOMER | Customer | API calls per customer |
+| PASSWORD_RESET | User | Password reset attempts |
+| WEBSOCKET_SESSIONS | Tenant | WebSocket connections |
+
+System administrators are exempt from rate limits.
+
+## Audit Logging
+
+All authentication events are recorded in the audit log for security monitoring and compliance.
+
+### Logged Events
+
+| Action | Description |
+|--------|-------------|
+| LOGIN | Successful user login |
+| LOGOUT | User logout |
+| LOGIN_LOCKOUT | Account locked after failed attempts |
+| CREDENTIALS_UPDATED | Password or credentials changed |
+| TWO_FA_ENABLED | 2FA enabled for user |
+| TWO_FA_DISABLED | 2FA disabled for user |
+
+### Audit Log Sinks
+
+| Sink | Description |
+|------|-------------|
+| Database | Default PostgreSQL storage |
+| Elasticsearch | Optional for advanced search |
 
 ## Best Practices
 

@@ -2,7 +2,20 @@
 
 ## Overview
 
-ThingsBoard's frontend is a sophisticated single-page application built on Angular with Material Design components. The architecture follows modular design principles with lazy-loaded feature modules, centralized state management, real-time WebSocket communication, and an extensible widget framework. This design enables a responsive, scalable user interface that handles complex IoT dashboard scenarios.
+ThingsBoard's frontend is a sophisticated single-page application built on **Angular 18.2.13** with Material Design components. The architecture follows modular design principles with lazy-loaded feature modules, centralized state management via **NgRx**, real-time WebSocket communication, and an extensible widget framework. This design enables a responsive, scalable user interface that handles complex IoT dashboard scenarios.
+
+## Technology Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Angular | 18.2.13 | Core framework |
+| Angular Material | 18.2.10 | UI component library |
+| NgRx | 18.x | State management |
+| RxJS | 7.8.x | Reactive programming |
+| TypeScript | 5.5.x | Type safety |
+| angular-gridster2 | 18.x | Dashboard grid layout |
+| Chart.js | 4.4.x | Charting library |
+| Leaflet | 1.9.x | Map widgets |
 
 ## Key Behaviors
 
@@ -228,8 +241,45 @@ graph TB
 |-------|---------|----------------|
 | LoadState | HTTP loading indicators | isLoading, pendingRequests |
 | AuthState | Authentication context | isAuthenticated, authUser, userDetails |
-| SettingsState | User preferences | language, timezone |
+| SettingsState | User preferences | language, timezone, theme |
 | NotificationState | Toast messages | notifications[] |
+
+### NgRx Feature Modules
+
+The application uses NgRx with feature state modules:
+
+```mermaid
+graph TB
+    subgraph "NgRx Store"
+        ROOT[Root State]
+    end
+
+    subgraph "Feature States"
+        AUTH_F[auth feature]
+        SETTINGS_F[settings feature]
+        NOTIFY_F[notification feature]
+    end
+
+    subgraph "Lazy-Loaded States"
+        DASH_F[dashboard feature]
+        DEVICE_F[device feature]
+    end
+
+    ROOT --> AUTH_F
+    ROOT --> SETTINGS_F
+    ROOT --> NOTIFY_F
+    ROOT -.->|lazy| DASH_F
+    ROOT -.->|lazy| DEVICE_F
+```
+
+### State Organization
+
+| Feature | Actions File | Reducer File | Effects File |
+|---------|-------------|--------------|--------------|
+| Auth | auth.actions.ts | auth.reducer.ts | auth.effects.ts |
+| Settings | settings.actions.ts | settings.reducer.ts | - |
+| Notification | notification.actions.ts | notification.reducer.ts | - |
+| Load | load.actions.ts | load.reducer.ts | - |
 
 ### Auth State Details
 

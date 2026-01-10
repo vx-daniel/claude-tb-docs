@@ -319,6 +319,109 @@ Messages from the same sender to the same actor are processed in send order. Mes
 ### At-Most-Once Delivery
 Messages are delivered at most once. If an actor fails mid-processing, the message is lost (callbacks can detect this).
 
+## TbActorSystem Implementation
+
+ThingsBoard uses a custom actor system implementation (`TbActorSystem`) rather than relying on frameworks like Akka. This provides full control over actor behavior and resource management.
+
+### Actor System Architecture
+
+```mermaid
+graph TB
+    subgraph "TbActorSystem"
+        SYSTEM[TbActorSystem]
+        DISPATCHER[TbDispatcher]
+        SCHEDULER[Scheduler]
+    end
+
+    subgraph "Actor Infrastructure"
+        MAILBOX[TbActorMailbox]
+        REF[TbActorRef]
+        CTX[TbActorCtx]
+    end
+
+    subgraph "Actors"
+        ACTOR1[Actor 1]
+        ACTOR2[Actor 2]
+        ACTOR3[Actor N]
+    end
+
+    SYSTEM --> DISPATCHER
+    SYSTEM --> SCHEDULER
+    DISPATCHER --> MAILBOX
+    MAILBOX --> ACTOR1
+    MAILBOX --> ACTOR2
+    MAILBOX --> ACTOR3
+    REF --> MAILBOX
+    CTX --> REF
+```
+
+### Core Components
+
+| Component | Class | Purpose |
+|-----------|-------|---------|
+| Actor System | TbActorSystem | Central orchestrator, manages all actors |
+| Dispatcher | TbDispatcher | Thread pool for actor message processing |
+| Mailbox | TbActorMailbox | Message queue per actor (bounded) |
+| Actor Reference | TbActorRef | Address for sending messages to actors |
+| Actor Context | TbActorCtx | Actor's view of the system (parent, children) |
+
+### TbActor Interface
+
+Every actor implements the `TbActor` interface:
+
+| Method | Purpose |
+|--------|---------|
+| `init(TbActorCtx ctx)` | Initialize actor with context |
+| `process(TbActorMsg msg)` | Handle a single message |
+| `destroy(String cause)` | Cleanup when actor stops |
+| `getActorRef()` | Get this actor's reference |
+
+### Actor ID Structure
+
+```mermaid
+graph LR
+    subgraph "TbEntityActorId"
+        TYPE[EntityType]
+        ID[Entity UUID]
+    end
+
+    subgraph "Examples"
+        DEV["DEVICE:a1b2c3d4-..."]
+        TENANT["TENANT:x1y2z3-..."]
+        RC["RULE_CHAIN:p1q2r3-..."]
+    end
+
+    TYPE --> DEV
+    TYPE --> TENANT
+    TYPE --> RC
+```
+
+### Dispatcher Configuration
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `actors.system.throughput` | 5 | Messages processed per dispatch cycle |
+| `actors.system.max_actor_init_attempts` | 10 | Retry attempts for actor initialization |
+| `actors.system.scheduler_pool_size` | 1 | Scheduled task thread pool |
+
+### Message Processing Flow
+
+```mermaid
+sequenceDiagram
+    participant Sender
+    participant Mailbox as TbActorMailbox
+    participant Dispatcher as TbDispatcher
+    participant Actor as TbActor
+
+    Sender->>Mailbox: tell(msg)
+    Mailbox->>Mailbox: enqueue(msg)
+    Mailbox->>Dispatcher: scheduleForProcessing()
+    Dispatcher->>Mailbox: process()
+    Mailbox->>Actor: process(msg)
+    Actor-->>Mailbox: done
+    Mailbox->>Dispatcher: checkForMoreMessages()
+```
+
 ## Performance Considerations
 
 ### Actor Pooling

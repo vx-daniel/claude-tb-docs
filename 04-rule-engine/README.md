@@ -12,7 +12,7 @@ The Rule Engine is the configurable business logic layer of the platform. It pro
 
 3. **Actor-Based Execution**: Each rule chain and rule node runs as an actor, providing isolation, concurrency, and fault tolerance.
 
-4. **Pluggable Node Architecture**: Over 50 built-in node types across 6 categories, with support for custom node development.
+4. **Pluggable Node Architecture**: Over 60 built-in node types across 6 categories, with support for custom node development.
 
 5. **Nested Rule Chains**: Rule chains can invoke other rule chains, enabling modular, reusable processing logic.
 
@@ -545,6 +545,89 @@ graph TB
 - All device attributes
 - Device connectivity events
 - RPC requests
+
+## Queue Processing Strategies
+
+Rule engine queues support different submit and processing strategies for handling message flow.
+
+### Submit Strategies
+
+| Strategy | Behavior | Use Case |
+|----------|----------|----------|
+| BURST | Submit all messages immediately | High throughput, best effort |
+| BATCH | Group messages into batches | Balanced throughput/latency |
+| SEQUENTIAL_BY_ORIGINATOR | Order by entity | Per-device ordering required |
+| SEQUENTIAL_BY_TENANT | Order by tenant | Tenant-level ordering |
+| SEQUENTIAL | Strict global order | Strict ordering (low throughput) |
+
+### Processing Strategies
+
+| Strategy | On Failure | Use Case |
+|----------|------------|----------|
+| SKIP_ALL_FAILURES | Log and continue | Non-critical data |
+| SKIP_ALL_FAILURES_AND_TIMED_OUT | Skip failed and timed out | Best effort processing |
+| RETRY_ALL | Retry failed messages | Critical data |
+| RETRY_FAILED | Retry only failures | Mixed criticality |
+| RETRY_TIMED_OUT | Retry only timeouts | Network-sensitive |
+| RETRY_FAILED_AND_TIMED_OUT | Retry both | Reliable delivery |
+
+### Queue Configuration Example
+
+```yaml
+queue:
+  rule-engine:
+    queues:
+      - name: Main
+        topic: tb_rule_engine.main
+        partitions: 10
+        consumer-per-partition: true
+        submit-strategy:
+          type: BURST
+          batch-size: 1000
+        processing-strategy:
+          type: SKIP_ALL_FAILURES
+          retries: 3
+          failure-percentage: 0
+          pause-between-retries: 3
+          max-pause-between-retries: 3
+
+      - name: HighPriority
+        topic: tb_rule_engine.hp
+        partitions: 4
+        submit-strategy:
+          type: SEQUENTIAL_BY_ORIGINATOR
+        processing-strategy:
+          type: RETRY_FAILED_AND_TIMED_OUT
+          retries: 5
+```
+
+### Strategy Selection Guide
+
+```mermaid
+graph TB
+    START[Choose Strategy]
+    Q1{Need ordering?}
+    Q2{Per entity or tenant?}
+    Q3{Critical data?}
+    Q4{Can retry?}
+
+    START --> Q1
+    Q1 -->|Yes| Q2
+    Q1 -->|No| BURST[BURST]
+
+    Q2 -->|Entity| SEQ_ORIG[SEQUENTIAL_BY_ORIGINATOR]
+    Q2 -->|Tenant| SEQ_TENANT[SEQUENTIAL_BY_TENANT]
+
+    BURST --> Q3
+    SEQ_ORIG --> Q3
+    SEQ_TENANT --> Q3
+
+    Q3 -->|Yes| Q4
+    Q3 -->|No| SKIP[SKIP_ALL_FAILURES]
+
+    Q4 -->|Yes| RETRY[RETRY_FAILED_AND_TIMED_OUT]
+    Q4 -->|No| SKIP
+```
 
 ## Performance Considerations
 

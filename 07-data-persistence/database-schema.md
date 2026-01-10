@@ -584,6 +584,38 @@ CREATE INDEX idx_ts_kv_entity_key ON ts_kv(entity_id, key, ts DESC);
 | maintenance_work_mem | 512MB | Maintenance operations |
 | effective_cache_size | 75% RAM | Query planner hint |
 
+### Connection Pooling (HikariCP)
+
+ThingsBoard uses HikariCP for connection pooling:
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| spring.datasource.url | jdbc:postgresql://localhost:5432/thingsboard | JDBC URL |
+| hikari.leakDetectionThreshold | 0 (disabled) | Leak detection timeout (ms) |
+| hikari.maximumPoolSize | 10 | Max connections per pool |
+| hikari.minimumIdle | 10 | Minimum idle connections |
+| hikari.connectionTimeout | 30000 | Connection timeout (ms) |
+
+### Dedicated Events DataSource
+
+Optional secondary datasource for event data isolation:
+
+```yaml
+spring.datasource.events:
+  enabled: true  # Enable dedicated events datasource
+  url: jdbc:postgresql://localhost:5432/thingsboard_events
+```
+
+### Custom PostgreSQL Dialect
+
+ThingsBoard uses a custom Hibernate dialect with additional functions:
+
+```
+ThingsboardPostgreSQLDialect
+  - ilike() function for case-insensitive search
+  - order_by.default_null_ordering: last
+```
+
 ### TimescaleDB Configuration
 
 For time-series heavy workloads:
@@ -601,6 +633,50 @@ ALTER TABLE ts_kv SET (
 );
 ```
 
+## Caching Layer
+
+### Redis/Valkey Caching (Distributed)
+
+| Configuration | Default | Description |
+|---------------|---------|-------------|
+| cache.type | redis | Cache implementation |
+| redis.connection.type | standalone | standalone, cluster, sentinel |
+| redis.evictTtlInMs | 60000 | Default eviction TTL |
+| redis.pool_config.maxTotal | 128 | Max pool connections |
+| redis.pool_config.maxIdle | 128 | Max idle connections |
+| redis.pool_config.minIdle | 16 | Min idle connections |
+
+### Caffeine Caching (Local)
+
+| Configuration | Default | Description |
+|---------------|---------|-------------|
+| cache.type | caffeine | In-memory cache |
+| Weight-based eviction | Yes | Collision-safe weigher |
+| TTL per cache | Configurable | Per-cache specification |
+| Stats recording | Enabled | Hit rate tracking |
+
+### Specialized Caches
+
+| Cache | Purpose |
+|-------|---------|
+| DeviceRedisCache | Device entities |
+| CustomerRedisCache | Customer entities |
+| UserRedisCache | User entities |
+| EdgeRedisCache | Edge entities |
+| OtaPackageDataCache | OTA package data |
+| TsLatestCache | Latest time-series values |
+| UsersSessionInvalidationRedisCache | Token invalidation |
+
+### Time-Series Latest Caching
+
+Redis-backed latest time-series values with cache-aside pattern:
+
+```
+CachedRedisSqlTimeseriesLatestDao
+  - VersionedTbCache<TsLatestCacheKey, TsKvEntry>
+  - Stats tracking: hit/miss counters
+```
+
 ## Best Practices
 
 1. **UUID Generation**: Use time-based UUIDs (Type 1) for better index locality.
@@ -609,11 +685,13 @@ ALTER TABLE ts_kv SET (
 
 3. **Partition Maintenance**: Regularly clean old time-series partitions.
 
-4. **Connection Pooling**: Use connection pooling (HikariCP) for efficient resource usage.
+4. **Connection Pooling**: Configure HikariCP pool sizes based on workload.
 
 5. **JSON Queries**: Create functional indexes for frequently queried JSON paths.
 
 6. **Vacuum Strategy**: Configure autovacuum for tables with high update frequency.
+
+7. **Cache Strategy**: Use Redis for distributed caching, Caffeine for local.
 
 ## See Also
 

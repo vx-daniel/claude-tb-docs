@@ -181,7 +181,7 @@ graph TB
 
 ## Controllers Overview
 
-The platform provides ~60 REST controllers organized by domain:
+The platform provides **57 REST controllers** organized by domain:
 
 ### Core Entity Controllers
 
@@ -219,8 +219,26 @@ The platform provides ~60 REST controllers organized by domain:
 |------------|-----------|-------------|
 | EntityRelationController | `/api/relation` | Entity relations |
 | EntityQueryController | `/api/entitiesQuery` | Advanced queries |
-| RpcController | `/api/rpc` | RPC commands |
+| RpcV1Controller | `/api/plugins/rpc` | RPC commands (deprecated) |
+| RpcV2Controller | `/api/rpc` | RPC commands (current) |
 | EdgeController | `/api/edge` | Edge management |
+
+### Additional Controllers
+
+| Controller | Base Path | Description |
+|------------|-----------|-------------|
+| ApiKeyController | `/api/apiKey` | API key management |
+| AiModelController | `/api/aiModel` | AI model configuration |
+| JobController | `/api/job` | Background job management |
+| NotificationController | `/api/notification` | Notification management |
+| NotificationRuleController | `/api/notification/rule` | Notification rules |
+| NotificationTemplateController | `/api/notification/template` | Notification templates |
+| OtaPackageController | `/api/otaPackage` | Firmware/software updates |
+| QueueController | `/api/queue` | Queue configuration |
+| QueueStatsController | `/api/queueStats` | Queue statistics |
+| ImageController | `/api/image` | Image management |
+| Lwm2mController | `/api/lwm2m` | LwM2M device configuration |
+| SystemInfoController | `/api/systemInfo` | System information |
 
 ## Common Patterns
 
@@ -593,13 +611,22 @@ Controllers use annotations to declare required authorities:
 
 ## Rate Limiting
 
-The platform implements rate limiting per tenant:
+The platform implements multi-level rate limiting via `RateLimitProcessingFilter`:
 
-| Limit Type | Default | Description |
-|------------|---------|-------------|
-| API requests | Configurable | Requests per second |
-| Telemetry messages | Configurable | Messages per second |
-| Entity creates | Configurable | Entities per time window |
+| Limit Type | Scope | Description |
+|------------|-------|-------------|
+| REST_REQUESTS_PER_TENANT | Tenant | API calls per tenant |
+| REST_REQUESTS_PER_CUSTOMER | Customer | API calls per customer |
+| Telemetry messages | Device | Messages per second |
+| Entity creates | Tenant | Entities per time window |
+
+### HAProxy Rate Limiting (Microservices)
+
+| Limit | Value | Description |
+|-------|-------|-------------|
+| conn_rate | 100 req/10s | Connection rate per source |
+| http_req_rate | 300 req/1min | HTTP request rate |
+| max connections | 50 per server | Backend connection limit |
 
 **Rate Limit Response:**
 ```json
@@ -609,6 +636,8 @@ The platform implements rate limiting per tenant:
   "errorCode": 33
 }
 ```
+
+System administrators are exempt from rate limits.
 
 ## Async Operations
 

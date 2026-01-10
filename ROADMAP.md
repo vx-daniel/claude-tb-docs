@@ -218,6 +218,18 @@ Guidelines:
 
 ## Changelog
 
+### 2026-01-10 (Session 2)
+- **Comprehensive documentation update based on exploration agent findings**
+- Updated authentication.md: API Keys, device credentials, security filter chain, audit logging, rate limiting
+- Updated rest-api-overview.md: 57 controllers count, RPC versioning, HAProxy rate limiting
+- Updated websocket-overview.md: Session tracking, pending session cache, gRPC Edge communication
+- Updated database-schema.md: HikariCP connection pooling, Redis/Caffeine caching layer
+- Updated microservices/README.md: Zookeeper discovery details, HAProxy load balancing configuration
+- Updated angular-architecture.md: Angular 18.2.13 technology stack, NgRx feature modules
+- Updated widget-system.md: Comprehensive WidgetContext services (40+ injected services)
+- Updated actor-system/README.md: TbActorSystem implementation, dispatcher configuration
+- Updated rule-engine/README.md: 60+ nodes, queue processing strategies (submit/processing)
+
 ### 2026-01-10
 - Scanned ThingsBoard 4.3.0-RC codebase for documentation updates
 - Added Technology Stack section to system-overview.md (Java 17, Spring Boot 3.4.10, Kafka 3.9.1)
@@ -227,6 +239,48 @@ Guidelines:
 - Updated microservices README with additional services (Monitoring, Web UI)
 - Updated queue-architecture.md with Queue Factory implementations
 - Identified new entity types: CALCULATED_FIELD, JOB, AI_MODEL, API_KEY
+- **Comprehensive codebase scan completed via 11 parallel exploration agents**
+
+**Agent Exploration Findings:**
+
+**API Layer (57 REST Controllers):**
+- Device API, Telemetry API, RPC API (v1 deprecated, v2 current)
+- WebSocket endpoints at `/api/ws/**` with JWT authentication
+- gRPC services for Edge communication (edge.proto, queue.proto)
+- Swagger/OpenAPI documentation via SpringDoc
+
+**Security Implementation:**
+- JWT authentication (HS512 algorithm) with refresh tokens
+- OAuth2 support (GitHub, Apple, custom mappers)
+- API Key / Personal Access Token authentication
+- Two-Factor Authentication (TOTP, Email, SMS, Backup codes)
+- Device credentials: ACCESS_TOKEN, X509_CERTIFICATE, MQTT_BASIC, LWM2M_CREDENTIALS
+- Comprehensive audit logging with Elasticsearch sink support
+
+**Persistence Layer:**
+- PostgreSQL (entities), Cassandra (time-series), TimescaleDB (time-series)
+- HikariCP connection pooling with configurable leak detection
+- Redis/Valkey and Caffeine caching strategies
+- SQL partitioning: DAYS, MONTHS, YEARS, INDEFINITE
+
+**Message Queue:**
+- Kafka primary implementation with In-Memory for monolith
+- Hash-based partitioning (murmur3_128, sha256 options)
+- Consumer services: Core, RuleEngine, Edge, CalculatedField
+- Topic structure: tb_core, tb_rule_engine.*, tb_transport.*, tb_edge
+
+**Microservices Architecture:**
+- Services: tb-node, mqtt/http/coap/lwm2m/snmp transports, js-executor, web-ui, vc-executor, edqs, monitoring
+- Zookeeper-based service discovery
+- HAProxy load balancing (round-robin, least-conn, source-sticky)
+- Docker Compose with replica configurations
+
+**Frontend (Angular 18.2.13):**
+- NgRx state management (auth, settings, notifications)
+- Widget system with WidgetContext injection (40+ services)
+- Dashboard framework with angular-gridster2 layout engine
+- WebSocket services for real-time telemetry/notifications
+- 64+ TypeScript model files, 40+ HTTP services
 
 ### 2026-01-09
 - Initial roadmap created

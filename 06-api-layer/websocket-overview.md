@@ -493,9 +493,35 @@ The server sends WebSocket ping frames periodically:
 | Setting | Default | Description |
 |---------|---------|-------------|
 | server.ws.ping_timeout | 30000ms | Time before connection considered stale |
+| server.ws.send_timeout | 5000ms | Async message send timeout |
 | Ping frequency | ping_timeout / 3 | Ping sent every ~10 seconds |
+| NUMBER_OF_PING_ATTEMPTS | 3 | Max missed pongs before disconnect |
 
 If no pong response is received within the timeout, the connection is closed.
+
+### Session Tracking
+
+The WebSocket handler maintains multiple session maps for efficient lookup:
+
+| Map | Purpose |
+|-----|---------|
+| internalSessionMap | Session ID → Session metadata |
+| externalSessionMap | External ID → Internal session ID |
+| tenantSessionsMap | Tenant ID → Set of session IDs |
+| customerSessionsMap | Customer ID → Set of session IDs |
+| regularUserSessionsMap | User ID → Set of session IDs |
+| publicUserSessionsMap | Public user ID → Set of session IDs |
+| blacklistedSessions | Rate-limited sessions |
+
+### Pending Session Cache
+
+Unauthenticated connections are stored in a Caffeine cache with TTL-based eviction:
+
+```
+pendingSessions: Caffeine cache
+  - expireAfterWrite: auth_timeout_ms (10s default)
+  - removalListener: Close with POLICY_VIOLATION on expiry
+```
 
 ## Rate Limiting
 
@@ -643,6 +669,27 @@ class ReconnectingWsClient extends ThingsboardWsClient {
   }
 }
 ```
+
+## Message Types (Wrappers)
+
+The WebSocket service processes two main command wrappers:
+
+| Wrapper | Purpose |
+|---------|---------|
+| TelemetryCmdsWrapper | Telemetry and entity data subscriptions |
+| NotificationCmdsWrapper | User notification subscriptions |
+
+## gRPC Edge Communication
+
+For Edge devices, ThingsBoard uses bidirectional gRPC streaming instead of WebSocket:
+
+```protobuf
+service EdgeRpcService {
+  rpc handleMsgs(stream RequestMsg) returns (stream ResponseMsg) {}
+}
+```
+
+Edge protocol versions supported: V3.3.0 through V4.3.0.
 
 ## Best Practices
 
