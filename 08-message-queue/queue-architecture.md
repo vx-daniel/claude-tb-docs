@@ -14,9 +14,27 @@ The message queue provides asynchronous, decoupled communication between platfor
 
 4. **Multiple Providers**: Supports Kafka for production deployments and in-memory queues for testing/single-node setups.
 
-5. **Notification Topics**: Each service instance has a dedicated notification topic for direct addressing.
+## Queue Factory Implementations
 
-6. **Consumer Groups**: Services form consumer groups for coordinated message processing with automatic partition assignment.
+The platform uses factory patterns to support different queue providers:
+
+| Factory | Implementation | Use Case |
+|---------|----------------|----------|
+| KafkaMonolithQueueFactory | Kafka-based queues | Production monolith |
+| KafkaTbCoreQueueFactory | Kafka core queues | Microservices core |
+| KafkaTbRuleEngineQueueFactory | Kafka rule engine | Microservices RE |
+| KafkaTbTransportQueueFactory | Kafka transport | Microservices transport |
+| KafkaEdqsQueueFactory | Kafka EDQS | Entity queries |
+| InMemoryMonolithQueueFactory | In-memory queues | Development/testing |
+| InMemoryTbTransportQueueFactory | In-memory transport | Single-node testing |
+
+### Queue State Management
+
+| Service | Description |
+|---------|-------------|
+| KafkaQueueStateService | Persisted queue offsets |
+| DefaultQueueStateService | In-memory state tracking |
+| QueueRoutingInfoService | Dynamic queue routing |
 
 ## Architecture Overview
 

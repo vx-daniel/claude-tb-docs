@@ -96,8 +96,13 @@ graph TB
 | TenantActor | AppActor | Tenant isolation, routes to devices/rule chains |
 | DeviceActor | TenantActor | Device sessions, RPC handling, credential updates |
 | RuleChainActor | TenantActor | Rule chain lifecycle, routes to rule nodes |
+| RuleChainManagerActor | TenantActor | Manages multiple rule chains |
 | RuleNodeActor | RuleChainActor | Individual node processing logic |
-| CalculatedFieldActor | TenantActor | Computed field calculations |
+| RuleEngineComponentActor | RuleChainActor | Base for rule engine components |
+| CalculatedFieldManagerActor | TenantActor | Manages calculated field actors |
+| CalculatedFieldEntityActor | CalculatedFieldManagerActor | Per-entity calculated fields |
+| StatsActor | System | Platform statistics collection |
+| RuleChainErrorActor | System | Error handling for failed rule chains |
 
 ## Message Flow
 

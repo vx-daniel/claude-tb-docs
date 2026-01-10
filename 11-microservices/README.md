@@ -106,10 +106,12 @@ graph TB
 | TB Core | TB_CORE | Entity management, REST API, device credentials |
 | TB Rule Engine | TB_RULE_ENGINE | Rule chain processing, data transformation |
 | TB Transport | TB_TRANSPORT | Protocol adapters for device communication |
-| JS Executor | JS_EXECUTOR | Remote JavaScript function execution |
+| JS Executor | JS_EXECUTOR | Remote JavaScript/TBEL function execution |
 | VC Executor | TB_VC_EXECUTOR | Version control and Git integration |
-| Entity Query | EDQS | Optimized entity data queries |
-| Task Processor | TASK_PROCESSOR | Background task execution |
+| Entity Query | EDQS | Optimized entity data queries (ElasticSearch-like) |
+| Task Processor | TASK_PROCESSOR | Background task and job execution |
+| Monitoring | MONITORING | System health and metrics collection |
+| Web UI | WEB_UI | Angular frontend serving |
 
 ## Service Responsibilities
 

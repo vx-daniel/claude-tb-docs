@@ -4,6 +4,22 @@
 
 ThingsBoard is a multi-tenant IoT platform that collects data from devices, processes it through configurable rule chains, stores it in databases, and presents it to users via dashboards. The platform handles millions of devices and messages through a scalable, distributed architecture.
 
+## Technology Stack
+
+| Component | Technology | Version |
+|-----------|------------|---------|
+| Language | Java | 17 |
+| Framework | Spring Boot | 3.4.10 |
+| Message Queue | Apache Kafka | 3.9.1 |
+| Time-Series DB | Apache Cassandra | 4.17.0 |
+| Relational DB | PostgreSQL | 15+ |
+| Cache | Valkey/Redis | 7+ |
+| RPC | gRPC | 1.76.0 |
+| Serialization | Protocol Buffers | 3.25.5 |
+| Networking | Netty | 4.1.128 |
+| Frontend | Angular | 18+ |
+| Service Discovery | Apache ZooKeeper | 3.9.3 |
+
 ## High-Level Architecture
 
 ```mermaid

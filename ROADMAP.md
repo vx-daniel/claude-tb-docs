@@ -2,7 +2,7 @@
 
 This file tracks documentation progress for the ThingsBoard platform rewrite preparation.
 
-**Last Updated**: 2026-01-09
+**Last Updated**: 2026-01-10
 
 ## Progress Summary
 
@@ -110,6 +110,7 @@ UI architecture and remaining transports/entities.
 ### Core Concepts - Entities
 | Document | Status | Path |
 |----------|--------|------|
+| Entity Types Overview | ✅ Done | `02-core-concepts/entities/entity-types-overview.md` |
 | Asset Entity | ⏳ Pending | `02-core-concepts/entities/asset.md` |
 | Tenant Entity | ⏳ Pending | `02-core-concepts/entities/tenant.md` |
 | Customer Entity | ⏳ Pending | `02-core-concepts/entities/customer.md` |
@@ -120,6 +121,7 @@ UI architecture and remaining transports/entities.
 ### Core Concepts - Data Model
 | Document | Status | Path |
 |----------|--------|------|
+| Calculated Fields | ✅ Done | `02-core-concepts/data-model/calculated-fields.md` |
 | RPC (Remote Procedure Call) | ⏳ Pending | `02-core-concepts/data-model/rpc.md` |
 | Entity IDs | ⏳ Pending | `02-core-concepts/identity/entity-ids.md` |
 
@@ -215,6 +217,16 @@ Guidelines:
 ---
 
 ## Changelog
+
+### 2026-01-10
+- Scanned ThingsBoard 4.3.0-RC codebase for documentation updates
+- Added Technology Stack section to system-overview.md (Java 17, Spring Boot 3.4.10, Kafka 3.9.1)
+- Created entity-types-overview.md documenting all 27 entity types
+- Created calculated-fields.md for new v4.x Calculated Fields feature
+- Updated actor system README with new actors (CalculatedFieldManagerActor, CalculatedFieldEntityActor, StatsActor)
+- Updated microservices README with additional services (Monitoring, Web UI)
+- Updated queue-architecture.md with Queue Factory implementations
+- Identified new entity types: CALCULATED_FIELD, JOB, AI_MODEL, API_KEY
 
 ### 2026-01-09
 - Initial roadmap created
