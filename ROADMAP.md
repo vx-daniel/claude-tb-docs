@@ -111,11 +111,11 @@ UI architecture and remaining transports/entities.
 | Document | Status | Path |
 |----------|--------|------|
 | Entity Types Overview | ✅ Done | `02-core-concepts/entities/entity-types-overview.md` |
-| Asset Entity | ⏳ Pending | `02-core-concepts/entities/asset.md` |
-| Tenant Entity | ⏳ Pending | `02-core-concepts/entities/tenant.md` |
-| Customer Entity | ⏳ Pending | `02-core-concepts/entities/customer.md` |
-| Dashboard Entity | ⏳ Pending | `02-core-concepts/entities/dashboard.md` |
-| Alarm Entity | ⏳ Pending | `02-core-concepts/entities/alarm.md` |
+| Asset Entity | ✅ Done | `02-core-concepts/entities/asset.md` |
+| Tenant Entity | ✅ Done | `02-core-concepts/entities/tenant.md` |
+| Customer Entity | ✅ Done | `02-core-concepts/entities/customer.md` |
+| Dashboard Entity | ✅ Done | `02-core-concepts/entities/dashboard.md` |
+| Alarm Entity | ✅ Done | `02-core-concepts/entities/alarm.md` |
 | Entity Relations | ⏳ Pending | `02-core-concepts/entities/relations.md` |
 
 ### Core Concepts - Data Model
@@ -167,7 +167,7 @@ UI architecture and remaining transports/entities.
 - [x] Rule Chain Processing Flow
 - [x] MQTT Connect Sequence
 - [x] JWT Authentication Sequence
-- [ ] Alarm Lifecycle Flow
+- [x] Alarm Lifecycle Flow
 - [x] Database Schema ER Diagram
 - [x] Queue Topic Structure
 - [x] Frontend Module Dependencies
@@ -217,6 +217,44 @@ Guidelines:
 ---
 
 ## Changelog
+
+### 2026-01-10 (Session 4)
+- Created Alarm Entity documentation (`02-core-concepts/entities/alarm.md`)
+  - Documented alarm data structure with all fields (severity, status, timestamps, propagation)
+  - Explained dual-flag lifecycle (acknowledged + cleared = 4 status combinations)
+  - Included mermaid diagrams for severity scale, state transitions, condition types, propagation flow
+  - Covered alarm triggers: rule chain conditions (SIMPLE, DURATION, REPEATING), manual API creation
+  - Documented deduplication behavior (one active alarm per type/originator)
+  - Explained comment system (SYSTEM auto-generated, OTHER user notes)
+  - Covered propagation to parent entities with configuration options
+  - Documented all operations (acknowledge, clear, assign, unassign)
+  - Listed REST API endpoints for retrieval, modification, and utilities
+
+### 2026-01-10 (Session 3)
+- Created Asset Entity documentation (`02-core-concepts/entities/asset.md`)
+  - Documented asset data structure and JSON format
+  - Explained asset profiles and their purpose
+  - Included mermaid diagrams for hierarchy, lifecycle, and data aggregation patterns
+  - Covered REST API endpoints, bulk import, and name conflict handling
+  - Documented entity relations and asset vs device comparison
+- Created Tenant Entity documentation (`02-core-concepts/entities/tenant.md`)
+  - Documented tenant data structure, profile system, and authority model
+  - Included mermaid diagrams for profile configuration, authority hierarchy, isolation
+  - Covered multi-tenancy isolation mechanisms (database, API, queue, cache)
+  - Documented tenant lifecycle (creation, update, deletion with cascade)
+  - Explained quota tracking, rate limits, and usage categories
+- Created Customer Entity documentation (`02-core-concepts/entities/customer.md`)
+  - Documented customer data structure and entity hierarchy
+  - Included mermaid diagrams for resource assignment, public customer, lifecycle
+  - Covered device/asset/dashboard assignment patterns
+  - Explained public customer concept and unauthenticated dashboard access
+  - Documented cascade deletion behavior and access control matrix
+- Created Dashboard Entity documentation (`02-core-concepts/entities/dashboard.md`)
+  - Documented dashboard data structure (DashboardInfo and full Dashboard)
+  - Explained configuration structure (widgets, layouts, aliases, states)
+  - Included mermaid diagrams for configuration, customer assignment, home dashboard
+  - Covered public dashboard functionality and mobile features
+  - Documented REST API endpoints and access control
 
 ### 2026-01-10 (Session 2)
 - **Comprehensive documentation update based on exploration agent findings**
