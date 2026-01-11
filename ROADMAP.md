@@ -137,14 +137,14 @@ UI architecture and remaining transports/entities.
 |----------|--------|------|
 | Authentication | ✅ Done | `09-security/authentication.md` |
 | Authorization | ✅ Done | `09-security/authorization.md` |
-| Tenant Isolation | ⏳ Pending | `09-security/tenant-isolation.md` |
+| Tenant Isolation | ✅ Done | `09-security/tenant-isolation.md` |
 
 ### Microservices
 | Document | Status | Path |
 |----------|--------|------|
-| TB Node | ⏳ Pending | `11-microservices/tb-node.md` |
-| JS Executor | ⏳ Pending | `11-microservices/js-executor.md` |
-| Transport Services | ⏳ Pending | `11-microservices/transport-services.md` |
+| TB Node | ✅ Done | `11-microservices/tb-node.md` |
+| JS Executor | ✅ Done | `11-microservices/js-executor.md` |
+| Transport Services | ✅ Done | `11-microservices/transport-services.md` |
 
 ---
 
@@ -217,6 +217,50 @@ Guidelines:
 ---
 
 ## Changelog
+
+### 2026-01-10 (Session 4 continued)
+- Created Tenant Isolation documentation (`09-security/tenant-isolation.md`)
+  - Documented six-layer defense-in-depth isolation architecture
+  - Explained database-level isolation (mandatory tenant_id in WHERE clauses)
+  - Covered API-level isolation (SecurityUser context, Access Validator)
+  - Documented permission-level isolation (HasTenantId interface, role-based checks)
+  - Explained actor system isolation (TenantAwareMsg routing, tenant actor hierarchy)
+  - Covered queue isolation (topic name separation with tenant UUID)
+  - Documented cache isolation (tenant-prefixed cache keys)
+  - Included mermaid diagrams for isolation layers, attack prevention, cleanup
+- Created TB Node documentation (`11-microservices/tb-node.md`)
+  - Documented TB Node as core application server
+  - Explained actor system with 6 dispatchers (app, tenant, device, rule, cf_manager, cf_entity)
+  - Covered rule engine configuration (thread pools, transaction settings)
+  - Documented REST API layer with 50+ controllers
+  - Explained queue integration and message flow
+  - Covered startup sequence and initialization phases
+  - Documented clustering with partition-based distribution
+  - Listed configuration reference for actors, queues, and transports
+  - Explained deployment options (Docker, monolith, microservices)
+- Created JS Executor documentation (`11-microservices/js-executor.md`)
+  - Documented JS Executor as sandboxed JavaScript execution service
+  - Explained communication protocol (Protobuf via Kafka queues)
+  - Covered request types (compile, invoke, release)
+  - Documented local vs remote execution modes
+  - Explained VM sandboxing (Node.js vm module)
+  - Covered script caching with LRU eviction
+  - Listed resource limits and timeout configuration
+  - Documented error handling and blacklisting
+  - Explained scaling considerations and performance tuning
+- Created Transport Services documentation (`11-microservices/transport-services.md`)
+  - Documented common transport abstraction layer (TransportService interface)
+  - Explained queue communication with TB Node
+  - Covered all 5 transports: MQTT, HTTP, CoAP, LwM2M, SNMP
+  - Documented MQTT architecture (Netty, gateway support, topics)
+  - Covered HTTP transport (Tomcat, async servlet, endpoints)
+  - Explained CoAP transport (Californium, PSM support, resources)
+  - Documented LwM2M transport (Leshan, object model, firmware update)
+  - Covered SNMP transport (SNMP4J, polling, traps)
+  - Explained deployment options (monolith vs microservices)
+  - Documented scaling strategies per protocol
+  - Covered health monitoring and rate limiting
+  - **All additional documentation items now complete!**
 
 ### 2026-01-10 (Session 4)
 - Created Alarm Entity documentation (`02-core-concepts/entities/alarm.md`)
